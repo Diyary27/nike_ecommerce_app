@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:nike_ecommerce_app/data/repo/product_repository.dart';
 import 'package:nike_ecommerce_app/theme.dart';
 
 void main() {

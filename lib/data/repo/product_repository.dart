@@ -1,9 +1,7 @@
-import 'package:dio/dio.dart';
+import 'package:nike_ecommerce_app/data/common/http_client.dart';
 import 'package:nike_ecommerce_app/data/product.dart';
 import 'package:nike_ecommerce_app/data/source/product_data_source.dart';
 
-final httpClient =
-    Dio(BaseOptions(baseUrl: 'http://expertdevelopers.ir/api/v1/'));
 final productRepository =
     ProductRepository(ProductReomteDataSource(httpClient));
 
