@@ -1,4 +1,4 @@
-import 'package:nike_ecommerce_app/data/common/http_client.dart';
+import 'package:nike_ecommerce_app/common/http_client.dart';
 import 'package:nike_ecommerce_app/data/product.dart';
 import 'package:nike_ecommerce_app/data/source/product_data_source.dart';
 

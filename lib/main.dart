@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
     );
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: TextTheme(
           bodyMedium: defaultTextStyle,
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Directionality(
         textDirection: TextDirection.rtl,
-        child: const HomeScreen(),
+        child: HomeScreen(),
       ),
     );
   }
