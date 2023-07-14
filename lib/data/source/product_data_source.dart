@@ -7,7 +7,9 @@ abstract class IProductDataSource {
   Future<List<ProductEntity>> search(String searchTerm);
 }
 
-class ProductReomteDataSource with HttpResponse implements IProductDataSource {
+class ProductReomteDataSource
+    with HttpResponseValidator
+    implements IProductDataSource {
   final Dio httpClient;
 
   ProductReomteDataSource(this.httpClient);

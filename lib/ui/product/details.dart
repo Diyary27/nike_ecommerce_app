@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nike_ecommerce_app/common/utils.dart';
 import 'package:nike_ecommerce_app/data/product.dart';
+import 'package:nike_ecommerce_app/ui/product/comment/comment_list.dart';
 import 'package:nike_ecommerce_app/ui/widgets/image.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -83,6 +84,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
+            CommentList(productId: product.id),
           ],
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:nike_ecommerce_app/data/repo/banner_repository.dart';
 import 'package:nike_ecommerce_app/data/repo/product_repository.dart';
 import 'package:nike_ecommerce_app/ui/home/bloc/home_bloc.dart';
 import 'package:nike_ecommerce_app/ui/product/product.dart';
+import 'package:nike_ecommerce_app/ui/widgets/error.dart';
 import 'package:nike_ecommerce_app/ui/widgets/slider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -60,19 +61,11 @@ class HomeScreen extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               } else if (state is HomeError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(state.exception.message),
-                      ElevatedButton(
-                        onPressed: () {
-                          BlocProvider.of<HomeBloc>(context).add(HomeRefresh());
-                        },
-                        child: Text('تلاش دوباره'),
-                      )
-                    ],
-                  ),
+                return AppErrorWidget(
+                  exception: state.exception,
+                  onPressed: () {
+                    BlocProvider.of<HomeBloc>(context).add(HomeRefresh());
+                  },
                 );
               } else {
                 throw Exception('State is not Supported');
