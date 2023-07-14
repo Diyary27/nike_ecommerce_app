@@ -61,7 +61,10 @@ class _Slide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-      child: ImageLoadingService(imageUrl: banner.imageUrl),
+      child: ImageLoadingService(
+        imageUrl: banner.imageUrl,
+        borderRadius: BorderRadius.circular(12),
+      ),
     );
   }
 }
