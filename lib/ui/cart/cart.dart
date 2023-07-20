@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nike_ecommerce_app/data/repo/auth_repository.dart';
+import 'package:nike_ecommerce_app/data/repo/cart_repository.dart';
 import 'package:nike_ecommerce_app/ui/auth/auth.dart';
 
 class CartScreen extends StatelessWidget {
@@ -38,6 +39,12 @@ class CartScreen extends StatelessWidget {
                       },
                       child: Text('لطفا وارد شوید'),
                     ),
+              ElevatedButton(
+                onPressed: () {
+                  cartRepository.getAll();
+                },
+                child: Text('demo'),
+              )
             ],
           );
         },

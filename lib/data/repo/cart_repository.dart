@@ -1,16 +1,17 @@
 import 'package:nike_ecommerce_app/common/http_client.dart';
 import 'package:nike_ecommerce_app/data/cart_item.dart';
+import 'package:nike_ecommerce_app/data/add_to_cart_response.dart';
 import 'package:nike_ecommerce_app/data/cart_response.dart';
 import 'package:nike_ecommerce_app/data/source/cart_data_source.dart';
 
 final cartRepository = CartRepository(CartRemoteDataSource(httpClient));
 
 abstract class ICartRepository {
-  Future<CartResponse> add(int productId);
+  Future<AddToCartResponse> add(int productId);
   Future<void> remove(int cartItemId);
-  Future<CartResponse> changeCount(int cartItemId, int count);
+  Future<AddToCartResponse> changeCount(int cartItemId, int count);
   Future<int> count();
-  Future<List<CartItemEntity>> getAll();
+  Future<CartResponse> getAll();
 }
 
 class CartRepository implements ICartRepository {
@@ -18,10 +19,10 @@ class CartRepository implements ICartRepository {
 
   CartRepository(this.dataSource);
   @override
-  Future<CartResponse> add(int productId) => dataSource.add(productId);
+  Future<AddToCartResponse> add(int productId) => dataSource.add(productId);
 
   @override
-  Future<CartResponse> changeCount(int cartItemId, int count) {
+  Future<AddToCartResponse> changeCount(int cartItemId, int count) {
     // TODO: implement changeCount
     throw UnimplementedError();
   }
@@ -33,10 +34,7 @@ class CartRepository implements ICartRepository {
   }
 
   @override
-  Future<List<CartItemEntity>> getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
-  }
+  Future<CartResponse> getAll() => dataSource.getAll();
 
   @override
   Future<void> remove(int cartItemId) {

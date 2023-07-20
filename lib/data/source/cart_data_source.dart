@@ -1,16 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:nike_ecommerce_app/data/cart_item.dart';
+import 'package:nike_ecommerce_app/data/add_to_cart_response.dart';
 import 'package:nike_ecommerce_app/data/cart_response.dart';
 import 'package:nike_ecommerce_app/data/common/http_response_validator.dart';
 import 'package:nike_ecommerce_app/data/repo/auth_repository.dart';
 
 abstract class ICartDataSource {
-  Future<CartResponse> add(int productId);
+  Future<AddToCartResponse> add(int productId);
   Future<void> remove(int cartItemId);
-  Future<CartResponse> changeCount(int cartItemId, int count);
+  Future<AddToCartResponse> changeCount(int cartItemId, int count);
   Future<int> count();
-  Future<List<CartItemEntity>> getAll();
+  Future<CartResponse> getAll();
 }
 
 class CartRemoteDataSource
@@ -21,17 +22,17 @@ class CartRemoteDataSource
   CartRemoteDataSource(this.httpClient);
 
   @override
-  Future<CartResponse> add(int productId) async {
+  Future<AddToCartResponse> add(int productId) async {
     // debugPrint(AuthRepository.authChangeNotifier.value?.accessToken);
     final response = await httpClient.post('cart/add', data: {
       "product_id": productId,
     });
     validateResponse(response);
-    return CartResponse.fromJson(response.data);
+    return AddToCartResponse.fromJson(response.data);
   }
 
   @override
-  Future<CartResponse> changeCount(int cartItemId, int count) {
+  Future<AddToCartResponse> changeCount(int cartItemId, int count) {
     // TODO: implement changeCount
     throw UnimplementedError();
   }
@@ -44,9 +45,12 @@ class CartRemoteDataSource
   }
 
   @override
-  Future<List<CartItemEntity>> getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
+  Future<CartResponse> getAll() async {
+    final response = await httpClient.get('cart/list');
+    validateResponse(response);
+
+    debugPrint(CartResponse.fromJson(response.data).toString());
+    return CartResponse.fromJson(response.data);
   }
 
   @override

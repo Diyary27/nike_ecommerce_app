@@ -9,4 +9,13 @@ class CartItemEntity {
       : cartItemId = json['cart_item_id'],
         product = ProductEntity.fromJson(json['product']),
         count = json['count'];
+
+  static List<CartItemEntity> parseJsonArray(List<dynamic> jsonArray) {
+    final List<CartItemEntity> cartItems = [];
+    jsonArray.forEach((element) {
+      cartItems.add(CartItemEntity.fromJson(element));
+    });
+
+    return cartItems;
+  }
 }
