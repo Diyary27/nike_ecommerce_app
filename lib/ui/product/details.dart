@@ -89,12 +89,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              widget.product.title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(fontSize: 18),
+                            Expanded(
+                              child: Text(
+                                widget.product.title,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(fontSize: 18),
+                              ),
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,

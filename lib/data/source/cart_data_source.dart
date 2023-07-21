@@ -49,7 +49,6 @@ class CartRemoteDataSource
     final response = await httpClient.get('cart/list');
     validateResponse(response);
 
-    debugPrint(CartResponse.fromJson(response.data).toString());
     return CartResponse.fromJson(response.data);
   }
 

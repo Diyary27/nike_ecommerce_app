@@ -6,3 +6,17 @@ abstract class CartEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class CartStarted extends CartEvent {
+  final AuthInfo? authInfo;
+  const CartStarted(this.authInfo);
+}
+
+class CartDeleteButtonClicked extends CartEvent {
+  final int cartItemId;
+
+  const CartDeleteButtonClicked(this.cartItemId);
+
+  @override
+  List<Object> get props => [cartItemId];
+}
