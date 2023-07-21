@@ -20,3 +20,9 @@ class CartDeleteButtonClicked extends CartEvent {
   @override
   List<Object> get props => [cartItemId];
 }
+
+class CartAuthChangedInfo extends CartEvent {
+  final AuthInfo? authInfo;
+
+  CartAuthChangedInfo(this.authInfo);
+}

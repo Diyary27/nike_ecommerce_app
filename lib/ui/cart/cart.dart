@@ -16,6 +16,25 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  late CartBloc? cartBloc;
+
+  void authChangeNotifierListener() {
+    cartBloc?.add(CartAuthChangedInfo(AuthRepository.authChangeNotifier.value));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    AuthRepository.authChangeNotifier.addListener(authChangeNotifierListener);
+  }
+
+  @override
+  void dispose() {
+    AuthRepository.authChangeNotifier.addListener(authChangeNotifierListener);
+    cartBloc?.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +45,7 @@ class _CartScreenState extends State<CartScreen> {
         body: BlocProvider<CartBloc>(
           create: (context) {
             final bloc = CartBloc(cartRepository);
+            cartBloc = bloc;
             bloc.add(CartStarted(AuthRepository.authChangeNotifier.value));
             return bloc;
           },
