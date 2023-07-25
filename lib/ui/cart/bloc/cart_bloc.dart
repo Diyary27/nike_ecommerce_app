@@ -34,7 +34,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<void> loadCartItems(Emitter<CartState> emit) async {
     try {
       final cartResponse = await cartRepository.getAll();
-      emit(CartSuccess(cartResponse));
+      if (cartResponse == null || cartResponse.carts.isEmpty) {
+        emit(CartEmpty());
+      } else {
+        emit(CartSuccess(cartResponse));
+      }
     } catch (e) {
       emit(CartError(AppException()));
     }

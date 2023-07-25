@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nike_ecommerce_app/common/utils.dart';
 import 'package:nike_ecommerce_app/data/repo/auth_repository.dart';
 import 'package:nike_ecommerce_app/data/repo/cart_repository.dart';
 import 'package:nike_ecommerce_app/ui/auth/auth.dart';
 import 'package:nike_ecommerce_app/ui/cart/bloc/cart_bloc.dart';
+import 'package:nike_ecommerce_app/ui/widgets/empty_state.dart';
 import 'package:nike_ecommerce_app/ui/widgets/image.dart';
 
 class CartScreen extends StatefulWidget {
@@ -38,6 +40,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         appBar: AppBar(
           centerTitle: true,
           title: Text('سبد خرید'),
@@ -135,20 +138,28 @@ class _CartScreenState extends State<CartScreen> {
                   },
                 );
               } else if (state is CartAuthRequired) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Text('لطفا وارد حساب کاربری خود شوید'),
+                return EmptyView(
+                    message:
+                        'برای مشاهده سبد خرید لطفا ابتدا وارد حساب کاربری خود شوید',
+                    image: SvgPicture.asset(
+                      "assets/img/auth_required.svg",
+                      width: MediaQuery.of(context).size.width * 0.5,
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => AuthScreen()));
-                        },
-                        child: Text('ورود')),
-                  ],
+                    callToAction: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) => AuthScreen())));
+                      },
+                      child: Text('ورود'),
+                    ));
+              } else if (state is CartEmpty) {
+                return EmptyView(
+                  message:
+                      'شما هنوز هیچ محصولی به سبد خرید خود اضافه نکرده اید',
+                  image: SvgPicture.asset(
+                    "assets/img/empty_cart.svg",
+                    width: MediaQuery.of(context).size.width * 0.5,
+                  ),
                 );
               } else {
                 throw Text('state unsuported');
