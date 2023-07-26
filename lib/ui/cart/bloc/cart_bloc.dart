@@ -38,7 +38,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             if (successState.cartResponse.carts.isEmpty) {
               emit(CartEmpty());
             } else {
-              emit(CartSuccess(successState.cartResponse));
+              emit(calculatePriceInfo(successState.cartResponse));
             }
           }
         } catch (e) {
@@ -67,5 +67,24 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     } catch (e) {
       emit(CartError(AppException()));
     }
+  }
+
+  CartSuccess calculatePriceInfo(CartResponse cartResponse) {
+    int totalPrice = 0;
+    int payablePrice = 0;
+    int shippingPrice = 0;
+
+    cartResponse.carts.forEach((element) {
+      totalPrice += element.product.previousPrice * element.count;
+      payablePrice += element.product.price * element.count;
+    });
+
+    shippingPrice = payablePrice > 500000 ? 0 : 50000;
+
+    cartResponse.totalPrice = totalPrice;
+    cartResponse.payablePrice = payablePrice;
+    cartResponse.shippingCost = shippingPrice;
+
+    return CartSuccess(cartResponse);
   }
 }

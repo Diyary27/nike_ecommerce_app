@@ -8,6 +8,7 @@ import 'package:nike_ecommerce_app/data/repo/cart_repository.dart';
 import 'package:nike_ecommerce_app/ui/auth/auth.dart';
 import 'package:nike_ecommerce_app/ui/cart/bloc/cart_bloc.dart';
 import 'package:nike_ecommerce_app/ui/cart/cart_item.dart';
+import 'package:nike_ecommerce_app/ui/cart/price_info.dart';
 import 'package:nike_ecommerce_app/ui/widgets/empty_state.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -88,16 +89,24 @@ class _CartScreenState extends State<CartScreen> {
                     spacing: 3,
                   ),
                   child: ListView.builder(
-                    itemCount: state.cartResponse.carts.length,
+                    itemCount: state.cartResponse.carts.length + 1,
                     itemBuilder: (context, index) {
-                      final cartItem = state.cartResponse.carts[index];
-                      return CartItem(
-                        cartItem: cartItem,
-                        onDeleteButtonClick: () {
-                          cartBloc?.add(
-                              CartDeleteButtonClicked(cartItem.cartItemId));
-                        },
-                      );
+                      if (index < state.cartResponse.carts.length) {
+                        final cartItem = state.cartResponse.carts[index];
+                        return CartItem(
+                          cartItem: cartItem,
+                          onDeleteButtonClick: () {
+                            cartBloc?.add(
+                                CartDeleteButtonClicked(cartItem.cartItemId));
+                          },
+                        );
+                      } else {
+                        return PriceInfo(
+                          payablePrice: state.cartResponse.payablePrice,
+                          shippingCost: state.cartResponse.shippingCost,
+                          totalPrice: state.cartResponse.totalPrice,
+                        );
+                      }
                     },
                   ),
                 );
