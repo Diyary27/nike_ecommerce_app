@@ -45,7 +45,7 @@ class CartRemoteDataSource
   Future<int> count() async {
     final response = await httpClient.get('cart/count');
     validateResponse(response);
-    return response.data;
+    return response.data['count'];
   }
 
   @override

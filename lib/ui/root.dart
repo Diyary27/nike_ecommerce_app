@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nike_ecommerce_app/data/repo/auth_repository.dart';
+import 'package:nike_ecommerce_app/data/repo/cart_repository.dart';
 import 'package:nike_ecommerce_app/ui/cart/cart.dart';
 import 'package:nike_ecommerce_app/ui/home/home.dart';
+import 'package:nike_ecommerce_app/ui/widgets/badge.dart';
 
 const int homeIndex = 0;
 const int cartIndex = 1;
@@ -17,6 +20,12 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   int selectedScreenIndex = homeIndex;
   final List<int> _history = [];
+
+  @override
+  void initState() {
+    cartRepository.count();
+    super.initState();
+  }
 
   GlobalKey<NavigatorState> _homeKey = GlobalKey();
   GlobalKey<NavigatorState> _cartKey = GlobalKey();
@@ -38,7 +47,20 @@ class _RootScreenState extends State<RootScreen> {
             _navigator(_homeKey, homeIndex, HomeScreen()),
             _navigator(_cartKey, cartIndex, CartScreen()),
             _navigator(
-                _profileKey, profileIndex, Center(child: Text('profile page'))),
+                _profileKey,
+                profileIndex,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('profile page'),
+                    ElevatedButton(
+                        onPressed: () {
+                          cartRepository.cartItemCountNotifier.value = 0;
+                          authRepository.signOut();
+                        },
+                        child: Text('خروج'))
+                  ],
+                )),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -54,7 +76,22 @@ class _RootScreenState extends State<RootScreen> {
             BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.home), label: 'خانه'),
             BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.cart), label: 'سبد خرید'),
+                icon: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(CupertinoIcons.cart),
+                    Positioned(
+                        right: -12,
+                        top: -5,
+                        child: ValueListenableBuilder<int>(
+                          valueListenable: cartRepository.cartItemCountNotifier,
+                          builder: (context, value, child) {
+                            return BadgeWidget(value: value);
+                          },
+                        )),
+                  ],
+                ),
+                label: 'سبد خرید'),
             BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.person), label: 'پروفایل'),
           ],

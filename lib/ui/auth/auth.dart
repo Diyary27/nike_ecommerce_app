@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nike_ecommerce_app/data/repo/auth_repository.dart';
+import 'package:nike_ecommerce_app/data/repo/cart_repository.dart';
 import 'package:nike_ecommerce_app/ui/auth/bloc/auth_bloc.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -55,6 +56,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 bloc.add(AuthStarted());
                 bloc.stream.forEach((state) {
                   if (state is AuthSuccess) {
+                    cartRepository.count();
                     Navigator.of(context).pop();
                   } else if (state is AuthError) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

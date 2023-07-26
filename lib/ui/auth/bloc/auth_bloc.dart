@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:nike_ecommerce_app/common/exceptions.dart';
 import 'package:nike_ecommerce_app/data/auth_info.dart';
 import 'package:nike_ecommerce_app/data/repo/auth_repository.dart';
+import 'package:nike_ecommerce_app/data/repo/cart_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -21,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(AuthSuccess(isLoginMode));
           } else {
             await authRepository.signUp(event.username, event.password);
+
             emit(AuthSuccess(isLoginMode));
           }
         } else if (event is AuthModeChangeIsClicked) {
