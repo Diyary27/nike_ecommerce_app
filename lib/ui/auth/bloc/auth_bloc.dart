@@ -10,8 +10,9 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final IAuthRepository authRepository;
+  final ICartRepository cartRepository;
   bool isLoginMode;
-  AuthBloc(this.authRepository, {this.isLoginMode = true})
+  AuthBloc(this.authRepository, this.cartRepository, {this.isLoginMode = true})
       : super(AuthInitial(isLoginMode)) {
     on<AuthEvent>((event, emit) async {
       try {
@@ -19,6 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthLoading(isLoginMode));
           if (isLoginMode) {
             await authRepository.login(event.username, event.password);
+            await cartRepository.count();
             emit(AuthSuccess(isLoginMode));
           } else {
             await authRepository.signUp(event.username, event.password);

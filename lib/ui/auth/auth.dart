@@ -52,11 +52,10 @@ class _AuthScreenState extends State<AuthScreen> {
             backgroundColor: themeData.colorScheme.secondary,
             body: BlocProvider<AuthBloc>(
               create: (context) {
-                final bloc = AuthBloc(authRepository);
+                final bloc = AuthBloc(authRepository, cartRepository);
                 bloc.add(AuthStarted());
                 bloc.stream.forEach((state) {
                   if (state is AuthSuccess) {
-                    cartRepository.count();
                     Navigator.of(context).pop();
                   } else if (state is AuthError) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
