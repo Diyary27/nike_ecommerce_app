@@ -54,10 +54,9 @@ class CartRemoteDataSource
 
   @override
   Future<void> remove(int cartItemId) async {
-    final response = await httpClient.post(
+    await httpClient.post(
       'cart/remove',
       data: {"cart_item_id": cartItemId},
     );
-    validateResponse(response);
   }
 }
