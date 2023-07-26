@@ -5,6 +5,7 @@ import 'package:nike_ecommerce_app/common/exceptions.dart';
 import 'package:nike_ecommerce_app/data/auth_info.dart';
 import 'package:nike_ecommerce_app/data/cart_response.dart';
 import 'package:nike_ecommerce_app/data/repo/cart_repository.dart';
+import 'package:nike_ecommerce_app/ui/product/bloc/product_bloc.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -40,6 +41,36 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             } else {
               emit(calculatePriceInfo(successState.cartResponse));
             }
+          }
+        } catch (e) {
+          debugPrint(e.toString());
+        }
+      } else if (event is CartIncreaseButtonClicked ||
+          event is CartDecreaseButtonClicked) {
+        int cartItemId = 0;
+        if (event is CartIncreaseButtonClicked) {
+          cartItemId = event.cartItemId;
+        } else if (event is CartDecreaseButtonClicked) {
+          cartItemId = event.cartItemId;
+        }
+        try {
+          if (state is CartSuccess) {
+            final successState = (state as CartSuccess);
+            final index = successState.cartResponse.carts
+                .indexWhere((element) => element.cartItemId == cartItemId);
+            successState.cartResponse.carts[index].changeCountLoading = true;
+            emit(CartSuccess(successState.cartResponse));
+
+            int newCount = (event is CartIncreaseButtonClicked)
+                ? ++successState.cartResponse.carts[index].count
+                : --successState.cartResponse.carts[index].count;
+
+            await cartRepository.changeCount(cartItemId, newCount);
+
+            successState.cartResponse.carts[index].count = newCount;
+            successState.cartResponse.carts[index].changeCountLoading = false;
+
+            emit(calculatePriceInfo(successState.cartResponse));
           }
         } catch (e) {
           debugPrint(e.toString());

@@ -9,10 +9,14 @@ class CartItem extends StatelessWidget {
     super.key,
     required this.cartItem,
     required this.onDeleteButtonClick,
+    required this.onIncreaseButtonClick,
+    required this.onDecreaseButtonClick,
   });
 
   final CartItemEntity cartItem;
   final GestureTapCallback onDeleteButtonClick;
+  final GestureTapCallback onIncreaseButtonClick;
+  final GestureTapCallback onDecreaseButtonClick;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +58,13 @@ class CartItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                          onPressed: () {},
+                          onPressed: onIncreaseButtonClick,
                           icon: Icon(CupertinoIcons.plus_square)),
-                      Text(cartItem.count.toString()),
+                      cartItem.changeCountLoading
+                          ? CupertinoActivityIndicator()
+                          : Text(cartItem.count.toString()),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: onDecreaseButtonClick,
                           icon: Icon(CupertinoIcons.minus_square)),
                     ],
                   ),
