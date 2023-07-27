@@ -24,6 +24,14 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        hintColor: LightThemeColors.secondaryTextColor,
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: LightThemeColors.primaryTextColor.withOpacity(0.2)),
+          ),
+        ),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           foregroundColor: LightThemeColors.primaryTextColor,
