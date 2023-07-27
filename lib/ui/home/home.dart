@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nike_ecommerce_app/common/utils.dart';
@@ -20,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final RefreshController _refreshController = RefreshController();
   HomeBloc? homeBloc;
+  StreamSubscription? streamSubscription;
 
   @override
   void initState() {
@@ -29,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     homeBloc?.close();
+    streamSubscription?.cancel();
     super.dispose();
   }
 
@@ -40,6 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
             bannerRepository: bannerRepository,
             productRepository: productRepository);
         homeBloc = bloc;
+        streamSubscription = bloc.stream.listen((state) {
+          if (_refreshController.isRefresh) {
+            if (state is HomeSuccess) {
+              _refreshController.refreshCompleted();
+            }
+          }
+        });
         bloc.add(HomeStarted(isRefresh: false));
 
         return bloc;
@@ -52,7 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 return SmartRefresher(
                   controller: _refreshController,
                   onRefresh: () {
-                    homeBloc?.add(HomeStarted(isRefresh: true));
+                    BlocProvider.of<HomeBloc>(context)
+                        .add(HomeStarted(isRefresh: true));
                   },
                   header: ClassicHeader(
                     completeText: 'با موفقیت به روز شد',

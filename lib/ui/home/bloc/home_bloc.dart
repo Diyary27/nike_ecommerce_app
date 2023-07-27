@@ -21,6 +21,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if (!event.isRefresh) {
           emit(HomeLoading());
         }
+
         try {
           final banners = await bannerRepository.getAll();
           final latestProducts =
