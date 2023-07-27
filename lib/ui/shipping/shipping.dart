@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nike_ecommerce_app/ui/cart/price_info.dart';
+import 'package:nike_ecommerce_app/ui/receipt/payment_receipt.dart';
 
 class ShippingScreen extends StatelessWidget {
   final int totalPrice;
@@ -53,7 +54,12 @@ class ShippingScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              OutlinedButton(onPressed: () {}, child: Text('پرداخت در محل')),
+              OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => PaymentReceiptScreen()));
+                  },
+                  child: Text('پرداخت در محل')),
               SizedBox(width: 10),
               ElevatedButton(onPressed: () {}, child: Text('پرداخت آنلاین')),
             ],
