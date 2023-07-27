@@ -8,54 +8,91 @@ import 'package:nike_ecommerce_app/ui/home/bloc/home_bloc.dart';
 import 'package:nike_ecommerce_app/ui/product/product.dart';
 import 'package:nike_ecommerce_app/ui/widgets/error.dart';
 import 'package:nike_ecommerce_app/ui/widgets/slider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final RefreshController _refreshController = RefreshController();
+  HomeBloc? homeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    homeBloc?.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<HomeBloc>(
       create: (context) {
-        final homeBloc = HomeBloc(
+        final bloc = HomeBloc(
             bannerRepository: bannerRepository,
             productRepository: productRepository);
-        homeBloc.add(HomeStarted());
-        return homeBloc;
+        homeBloc = bloc;
+        bloc.add(HomeStarted(isRefresh: false));
+
+        return bloc;
       },
       child: Scaffold(
         body: SafeArea(
           child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) {
               if (state is HomeSuccess) {
-                return ListView.builder(
-                    physics: defaultScrollPhysics,
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      switch (index) {
-                        case 0:
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
-                            child: Image.asset(
-                              'assets/img/nike_logo.png',
-                              height: 24,
-                            ),
-                          );
-                        case 2:
-                          return BannerSlider(banners: state.banners);
-                        case 3:
-                          return _ProductsList(
-                            title: 'جدیدترین محصولات',
-                            products: state.latestProducts,
-                          );
-                        case 4:
-                          return _ProductsList(
-                            title: 'مشهورترین محصولات',
-                            products: state.popularProducts,
-                          );
-                        default:
-                          return Container();
-                      }
-                    });
+                return SmartRefresher(
+                  controller: _refreshController,
+                  onRefresh: () {
+                    homeBloc?.add(HomeStarted(isRefresh: true));
+                  },
+                  header: ClassicHeader(
+                    completeText: 'با موفقیت به روز شد',
+                    refreshingText: 'در حال به روز رسانی',
+                    idleText: 'برای به روز رسانی پایین بکشید',
+                    releaseText: 'رها کنید',
+                    failedText: 'خطا در به روز رسانی',
+                    spacing: 3,
+                  ),
+                  child: ListView.builder(
+                      physics: defaultScrollPhysics,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        switch (index) {
+                          case 0:
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(12, 16, 12, 16),
+                              child: Image.asset(
+                                'assets/img/nike_logo.png',
+                                height: 24,
+                              ),
+                            );
+                          case 2:
+                            return BannerSlider(banners: state.banners);
+                          case 3:
+                            return _ProductsList(
+                              title: 'جدیدترین محصولات',
+                              products: state.latestProducts,
+                            );
+                          case 4:
+                            return _ProductsList(
+                              title: 'مشهورترین محصولات',
+                              products: state.popularProducts,
+                            );
+                          default:
+                            return Container();
+                        }
+                      }),
+                );
               } else if (state is HomeLoading) {
                 return Center(
                   child: CircularProgressIndicator(),
@@ -64,11 +101,15 @@ class HomeScreen extends StatelessWidget {
                 return AppErrorWidget(
                   exception: state.exception,
                   onPressed: () {
-                    BlocProvider.of<HomeBloc>(context).add(HomeRefresh());
+                    BlocProvider.of<HomeBloc>(context)
+                        .add(HomeStarted(isRefresh: false));
                   },
                 );
               } else {
-                throw Exception('State is not Supported');
+                // throw Exception('State is not Supported');
+                debugPrint(state.toString());
+
+                return Text('data');
               }
             },
           ),

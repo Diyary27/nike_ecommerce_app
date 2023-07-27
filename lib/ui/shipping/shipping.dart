@@ -39,7 +39,9 @@ class ShippingScreen extends StatelessWidget {
                   SnackBar(content: Text(state.exception.message)));
             } else if (state is ShippingSuccess) {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PaymentReceiptScreen()));
+                  builder: (context) => PaymentReceiptScreen(
+                        orderId: state.result.orderId,
+                      )));
             }
           });
           return bloc;

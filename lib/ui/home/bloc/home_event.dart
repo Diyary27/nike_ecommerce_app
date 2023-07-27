@@ -7,6 +7,8 @@ abstract class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class HomeStarted extends HomeEvent {}
+class HomeStarted extends HomeEvent {
+  final bool isRefresh;
 
-class HomeRefresh extends HomeEvent {}
+  HomeStarted({required this.isRefresh});
+}
