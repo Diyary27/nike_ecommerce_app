@@ -7,6 +7,7 @@ import 'package:nike_ecommerce_app/data/product.dart';
 import 'package:nike_ecommerce_app/data/repo/banner_repository.dart';
 import 'package:nike_ecommerce_app/data/repo/product_repository.dart';
 import 'package:nike_ecommerce_app/ui/home/bloc/home_bloc.dart';
+import 'package:nike_ecommerce_app/ui/list/list.dart';
 import 'package:nike_ecommerce_app/ui/product/product.dart';
 import 'package:nike_ecommerce_app/ui/widgets/error.dart';
 import 'package:nike_ecommerce_app/ui/widgets/slider.dart';
@@ -94,11 +95,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             return _ProductsList(
                               title: 'جدیدترین محصولات',
                               products: state.latestProducts,
+                              tapCallback: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ProductListScreen(
+                                        sort: ProductSort.latest)));
+                              },
                             );
                           case 4:
                             return _ProductsList(
                               title: 'مشهورترین محصولات',
                               products: state.popularProducts,
+                              tapCallback: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ProductListScreen(
+                                        sort: ProductSort.popular)));
+                              },
                             );
                           default:
                             return Container();
@@ -134,10 +145,12 @@ class _HomeScreenState extends State<HomeScreen> {
 class _ProductsList extends StatelessWidget {
   final String title;
   final List<ProductEntity> products;
+  final GestureTapCallback tapCallback;
   _ProductsList({
     super.key,
     required this.title,
     required this.products,
+    required this.tapCallback,
   });
 
   @override
@@ -154,7 +167,7 @@ class _ProductsList extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: tapCallback,
                 child: Text('مشاهده همه'),
               ),
             ],

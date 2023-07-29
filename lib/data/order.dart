@@ -4,7 +4,7 @@ class CreateOrderResult {
 
   CreateOrderResult.fromJson(Map<String, dynamic> json)
       : orderId = json['order_id'],
-        bankGateWayUrl = json['bank_gateWay_url'] ?? '';
+        bankGateWayUrl = json['bank_gateway_url'] ?? '';
 }
 
 class CreateOrderParams {

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nike_ecommerce_app/data/order.dart';
 import 'package:nike_ecommerce_app/data/repo/order_repository.dart';
 import 'package:nike_ecommerce_app/ui/cart/price_info.dart';
+import 'package:nike_ecommerce_app/ui/payment_webview.dart';
 import 'package:nike_ecommerce_app/ui/receipt/payment_receipt.dart';
 import 'package:nike_ecommerce_app/ui/shipping/bloc/shipping_bloc.dart';
 
@@ -34,14 +35,20 @@ class ShippingScreen extends StatelessWidget {
         create: (context) {
           final bloc = ShippingBloc(orderRepository);
           bloc.stream.listen((state) {
-            if (state is ShippingError) {
+            if (state is ShippingSuccess) {
+              if (state.result.bankGateWayUrl.isNotEmpty) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PaymentGateWayScreen(
+                        bankGateWayUrl: state.result.bankGateWayUrl)));
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PaymentReceiptScreen(
+                          orderId: state.result.orderId,
+                        )));
+              }
+            } else if (state is ShippingError) {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.exception.message)));
-            } else if (state is ShippingSuccess) {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PaymentReceiptScreen(
-                        orderId: state.result.orderId,
-                      )));
             }
           });
           return bloc;
@@ -110,7 +117,18 @@ class ShippingScreen extends StatelessWidget {
                               child: Text('پرداخت در محل')),
                           SizedBox(width: 10),
                           ElevatedButton(
-                              onPressed: () {}, child: Text('پرداخت آنلاین')),
+                              onPressed: () {
+                                BlocProvider.of<ShippingBloc>(context)
+                                    .add(ShippingCreateOrder(CreateOrderParams(
+                                  _firstNameController.text,
+                                  _lastNameController.text,
+                                  _phoneController.text,
+                                  _postalCodeController.text,
+                                  _addressController.text,
+                                  PaymentMethod.online,
+                                )));
+                              },
+                              child: Text('پرداخت آنلاین')),
                         ],
                       );
               },
